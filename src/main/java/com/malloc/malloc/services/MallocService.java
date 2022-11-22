@@ -1,13 +1,16 @@
 package com.malloc.malloc.services;
 
+import com.google.common.base.Stopwatch;
 import com.malloc.malloc.Simulador;
 import com.malloc.malloc.domain.Memoria;
 import com.malloc.malloc.domain.Particao;
+import com.malloc.malloc.domain.Resposta;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/malloc")
@@ -16,7 +19,7 @@ public class MallocService {
     private boolean iniciado = false;
     private Simulador simulador;
 
-    @PostMapping
+    @GetMapping
     @RequestMapping("/init")
     public ResponseEntity customInit(@RequestParam("memorySize") int memorySize){
         if (!iniciado){
@@ -28,41 +31,65 @@ public class MallocService {
         return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\"Simulador já foi iniciado\"}");
     }
 
-    @PostMapping
-    @RequestMapping("/bestFit")
-    public ResponseEntity bestFit(@RequestParam("partitions") int partitions){
-        if (!iniciado){
-            init();
-        }
-        if (!alloc(partitions, Alocacao.BESTFIT)){
-            return badResponse();
-        }
-        return ResponseEntity.ok(getAll());
+    @GetMapping
+    @RequestMapping("/reset")
+    public ResponseEntity reset(@RequestParam("memorySize") int memorySize){
+        this.simulador = new Simulador(memorySize);
+        this.iniciado = true;
+        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\"Reiniciado\"}");
     }
 
     @PostMapping
-    @RequestMapping("/worstFit")
-    public ResponseEntity worstFit(@RequestParam("partitions") int partitions){
+    @RequestMapping("/bestFit")
+    public ResponseEntity bestFit(@RequestBody int[] partitions){
         if (!iniciado){
             init();
         }
-        if (!alloc(partitions, Alocacao.WORSTFIT)){
-            return badResponse();
+
+        Stopwatch timer = Stopwatch.createStarted();
+
+        for (int i: partitions) {
+            if (!alloc(i, Alocacao.BESTFIT)){
+                return badResponse();
+            }
         }
-        return ResponseEntity.ok(getAll());
+        long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
+
+        return ResponseEntity.ok(getAll(elapsed));
+    }
+
+
+    @PostMapping
+    @RequestMapping("/worstFit")
+    public ResponseEntity worstFit(@RequestBody int[] partitions){
+        if (!iniciado){
+            init();
+        }
+        Stopwatch timer = Stopwatch.createStarted();
+        for (int i: partitions) {
+            if (!alloc(i, Alocacao.WORSTFIT)){
+                return badResponse();
+            }
+        }
+        long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
+
+        return ResponseEntity.ok(getAll(elapsed));
     }
 
     @PostMapping
     @RequestMapping("/firstFit")
-    public ResponseEntity firstFit(@RequestParam("partitions") int partitions){
+    public ResponseEntity firstFit(@RequestBody int[] partitions){
         if (!iniciado){
             init();
         }
-        if (!alloc(partitions, Alocacao.FIRSTFIT)){
-            return badResponse();
+        Stopwatch timer = Stopwatch.createStarted();
+        for (int i: partitions) {
+            if (!alloc(i, Alocacao.FIRSTFIT)){
+                return badResponse();
+            }
         }
-
-        return ResponseEntity.ok(getAll());
+        long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
+        return ResponseEntity.ok(getAll(elapsed));
     }
 
     @GetMapping
@@ -75,6 +102,9 @@ public class MallocService {
 
     private List<Memoria> getAll(){
         return simulador.ShowPartitions();
+    }
+    private Resposta getAll(long duration){
+        return new Resposta(duration, simulador.ShowPartitions());
     }
 
     private boolean alloc(int partitions, Alocacao alocacao) {

@@ -39,6 +39,6 @@ public class Memoria {
     }
 
     public int getTamanho(){
-        return fim - inicio;
+        return fim - inicio + 1;
     }
 }
