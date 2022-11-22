@@ -17,13 +17,12 @@ import java.util.concurrent.TimeUnit;
 public class MallocService {
 
     private boolean iniciado = false;
-    private Simulador simulador;
 
     @GetMapping
     @RequestMapping("/init")
     public ResponseEntity customInit(@RequestParam("memorySize") int memorySize){
         if (!iniciado){
-            this.simulador = new Simulador(memorySize);
+            Simulador.setInstance(memorySize);
             this.iniciado = true;
             return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\"iniciado\"}");
         }
@@ -34,7 +33,7 @@ public class MallocService {
     @GetMapping
     @RequestMapping("/reset")
     public ResponseEntity reset(@RequestParam("memorySize") int memorySize){
-        this.simulador = new Simulador(memorySize);
+        Simulador.setInstance(memorySize);
         this.iniciado = true;
         return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\"Reiniciado\"}");
     }
@@ -104,10 +103,10 @@ public class MallocService {
     }
 
     private List<Memoria> getAll(){
-        return simulador.ShowPartitions();
+        return Simulador.getInstance().ShowPartitions();
     }
     private Resposta getAll(long duration){
-        return new Resposta(duration, simulador.ShowPartitions());
+        return new Resposta(duration, Simulador.getInstance().ShowPartitions());
     }
 
     private boolean alloc(int partitions, Alocacao alocacao) {
@@ -117,17 +116,17 @@ public class MallocService {
 
         switch (alocacao){
             case BESTFIT:
-                res = simulador.bestFit(p);
+                res = Simulador.getInstance().bestFit(p);
                 break;
             case WORSTFIT:
-                res = simulador.worstFit(p);
+                res = Simulador.getInstance().worstFit(p);
                 break;
             case FIRSTFIT:
-                res = simulador.firstFit(p);
+                res = Simulador.getInstance().firstFit(p);
                 break;
         }
 
-        return simulador.alloc(res, p, partitions);
+        return Simulador.getInstance().alloc(res, p, partitions);
     }
 
     private ResponseEntity badResponse(){
@@ -136,7 +135,7 @@ public class MallocService {
     }
 
     private void init(){
-        this.simulador = new Simulador(1000);
+        Simulador.setInstance(1000);
         this.iniciado = true;
     }
 }

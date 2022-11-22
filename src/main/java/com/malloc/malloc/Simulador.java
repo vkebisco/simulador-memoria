@@ -9,17 +9,18 @@ import java.util.List;
 
 public class Simulador {
 
+    private static Simulador simulador;
     private int memoria;
 
     private ArrayList<Particao> particoes;
 
-    public Simulador(int memoria){
+    private Simulador(int memoria){
         this.memoria = memoria;
         this.particoes = new ArrayList<>();
         this.particoes.add(new Particao(0,memoria, true));
     }
 
-    public Simulador(){
+    private Simulador(){
         this.particoes = new ArrayList<>();
         this.particoes.add(new Particao(0,memoria, true));
     }
@@ -95,6 +96,27 @@ public class Simulador {
             memorias.add(new Memoria(start, (start + size - 1), p.isFree()));
         }
         return memorias;
+    }
 
+    public boolean free(int startAddress){
+        for (Particao particoe : particoes) {
+            if (particoe.getEnderecoDeInicio() == startAddress && !particoe.isFree()) {
+                particoe.setFree(true);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Simulador getInstance(){
+        if (simulador == null){
+            simulador = new Simulador(1000);
+        }
+        return simulador;
+    }
+
+    //Sei que não é bem de livro didático de padrões de projeto, mas achei que encaixaria bem
+    public static void setInstance(int memoria){
+        simulador = new Simulador(memoria);
     }
 }
