@@ -50,6 +50,7 @@ public class MallocService {
 
         for (int i: partitions) {
             if (!alloc(i, Alocacao.BESTFIT)){
+                timer.stop();
                 return badResponse();
             }
         }
@@ -68,6 +69,7 @@ public class MallocService {
         Stopwatch timer = Stopwatch.createStarted();
         for (int i: partitions) {
             if (!alloc(i, Alocacao.WORSTFIT)){
+                timer.stop();
                 return badResponse();
             }
         }
@@ -85,6 +87,7 @@ public class MallocService {
         Stopwatch timer = Stopwatch.createStarted();
         for (int i: partitions) {
             if (!alloc(i, Alocacao.FIRSTFIT)){
+                timer.stop();
                 return badResponse();
             }
         }
