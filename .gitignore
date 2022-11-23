@@ -6,7 +6,7 @@ target/maven-archiver
 target/maven-status
 target/surefire-reports
 target/test-classes/
-target/malloc-0.0.1-SNAPSHOT.jar.original
+target/memory-simulator.jar.original
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
