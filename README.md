@@ -5,7 +5,7 @@
 ## Para rodar com docker
 
 ```
-docker run -d -p 8080:8080 vkebisco/memory-simulator
+docker run -d -p 8080:8080 vkebisco/memory-simulator-v2
 
 ```
 
