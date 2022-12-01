@@ -70,7 +70,7 @@ public class MallocService {
             return notYetInit();
         }
         simulador.setParticoes(new ArrayList<>());
-        this.iniciado = true;
+        this.iniciado = false;
         return ResponseEntity.ok().build();
     }
 
