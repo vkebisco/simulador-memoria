@@ -92,9 +92,9 @@ public class MallocService {
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping
+    @GetMapping
     @RequestMapping("/desalocar")
-    public ResponseEntity desalocar(@RequestBody int index){
+    public ResponseEntity desalocar(@RequestParam("index") int index){
         if (!iniciado){
             return notYetInit();
         }

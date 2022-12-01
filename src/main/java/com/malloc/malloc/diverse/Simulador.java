@@ -61,7 +61,9 @@ public class Simulador {
     }
 
     public List<Particao> desalocar(int index){
-        this.particoes.remove(index);
+        var p =this.particoes.get(index);
+        p.setProcesso(null);
+        p.setFree(true);
         return this.particoes;
     }
 
