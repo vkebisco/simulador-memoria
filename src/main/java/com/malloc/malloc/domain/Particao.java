@@ -9,20 +9,6 @@ public class Particao {
     private Processo processo;
     private String duracao;
 
-    public Particao(){
-        this.enderecoDeInicio = -1;
-        this.isFree = true;
-        this.tamanho = 0;
-    }
-
-    public Particao(int enderecoDeInicio, int tamanho, boolean isFree, Processo processo, String duracao) {
-        this.enderecoDeInicio = enderecoDeInicio;
-        this.tamanho = tamanho;
-        this.isFree = isFree;
-        this.processo = processo;
-        this.duracao = duracao;
-    }
-
     public Particao(int enderecoDeInicio, int tamanho, boolean isFree, Processo processo) {
         this.enderecoDeInicio = enderecoDeInicio;
         this.tamanho = tamanho;
@@ -30,19 +16,8 @@ public class Particao {
         this.processo = processo;
     }
 
-    public Particao(int enderecoDeInicio, Processo processo, boolean isFree){
-        this.enderecoDeInicio = enderecoDeInicio;
-        this.isFree = isFree;
-        this.processo = processo;
-    }
-
     public Particao(int enderecoDeInicio, int tamanho, boolean isFree){
         this.enderecoDeInicio = enderecoDeInicio;
-        this.isFree = isFree;
-        this.tamanho = tamanho;
-    }
-    public Particao(int tamanho, boolean isFree){
-        this.enderecoDeInicio = -1;
         this.isFree = isFree;
         this.tamanho = tamanho;
     }
