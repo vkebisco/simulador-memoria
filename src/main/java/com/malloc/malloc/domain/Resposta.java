@@ -6,14 +6,24 @@ public class Resposta {
 
     private Long duracaoEmNanoSegundos;
 
-    private List<Memoria> memoriaList;
+    private List<Particao> particaoList;
+    private boolean sucesso;
 
     public Resposta() {
     }
 
-    public Resposta(Long duracaoEmNanoSegundos, List<Memoria> memoriaList) {
+    public Resposta(Long duracaoEmNanoSegundos, List<Particao> particaoList, boolean sucesso) {
         this.duracaoEmNanoSegundos = duracaoEmNanoSegundos;
-        this.memoriaList = memoriaList;
+        this.particaoList = particaoList;
+        this.sucesso = sucesso;
+    }
+
+    public List<Particao> getParticaoList() {
+        return particaoList;
+    }
+
+    public void setParticaoList(List<Particao> particaoList) {
+        this.particaoList = particaoList;
     }
 
     public Long getDuracaoEmNanoSegundos() {
@@ -24,11 +34,12 @@ public class Resposta {
         this.duracaoEmNanoSegundos = duracaoEmNanoSegundos;
     }
 
-    public List<Memoria> getMemoriaList() {
-        return memoriaList;
+
+    public boolean isSucesso() {
+        return sucesso;
     }
 
-    public void setMemoriaList(List<Memoria> memoriaList) {
-        this.memoriaList = memoriaList;
+    public void setSucesso(boolean sucesso) {
+        this.sucesso = sucesso;
     }
 }

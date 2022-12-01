@@ -1,4 +1,4 @@
-package com.malloc.malloc.services;
+package com.malloc.malloc.diverse;
 
 public enum Alocacao {
     BESTFIT,

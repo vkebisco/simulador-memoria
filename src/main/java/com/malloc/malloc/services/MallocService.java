@@ -1,14 +1,16 @@
 package com.malloc.malloc.services;
 
 import com.google.common.base.Stopwatch;
-import com.malloc.malloc.Simulador;
-import com.malloc.malloc.domain.Memoria;
+import com.malloc.malloc.diverse.Alocacao;
+import com.malloc.malloc.diverse.Simulador;
 import com.malloc.malloc.domain.Particao;
+import com.malloc.malloc.domain.ParticoesToSet;
+import com.malloc.malloc.domain.Processo;
 import com.malloc.malloc.domain.Resposta;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,125 +20,93 @@ public class MallocService {
 
     private boolean iniciado = false;
 
-    @GetMapping
-    @RequestMapping("/init")
-    public ResponseEntity customInit(@RequestParam("memorySize") int memorySize){
-        if (!iniciado){
-            Simulador.setInstance(memorySize);
-            this.iniciado = true;
-            return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\"iniciado\"}");
+    private Simulador simulador;
+
+    @PostMapping
+    @RequestMapping("/setParticoes")
+    public ResponseEntity setParticoes(@RequestBody ParticoesToSet particoes){
+
+        List<Particao> particaoList = new ArrayList<>();
+
+        int inicio = 0;
+        for (int i : particoes.getParticoes()){
+            particaoList.add(new Particao(inicio, i, true));
+            inicio = inicio + i;
         }
 
-        return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\"Simulador já foi iniciado\"}");
-    }
+        Alocacao tipo = null;
 
-    @GetMapping
-    @RequestMapping("/reset")
-    public ResponseEntity reset(@RequestParam("memorySize") int memorySize){
-        Simulador.setInstance(memorySize);
+        switch (particoes.getTipoAlocacao()){
+            case 1:
+                tipo = Alocacao.BESTFIT;
+                break;
+            case 2:
+                tipo = Alocacao.WORSTFIT;
+                break;
+            case 3:
+                tipo = Alocacao.FIRSTFIT;
+                break;
+        }
+
+        this.simulador = new Simulador(particoes.getTamanhoMemoria(), particaoList, tipo);
+
         this.iniciado = true;
-        return ResponseEntity.status(200).contentType(MediaType.APPLICATION_JSON).body("{\"mensagem\":\"Reiniciado\"}");
-    }
 
-    @PostMapping
-    @RequestMapping("/bestFit")
-    public ResponseEntity bestFit(@RequestBody int[] partitions){
-        if (!iniciado){
-            init();
-        }
-
-        Stopwatch timer = Stopwatch.createStarted();
-
-        for (int i: partitions) {
-            if (!alloc(i, Alocacao.BESTFIT)){
-                timer.stop();
-                return badResponse();
-            }
-        }
-        long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
-
-        return ResponseEntity.ok(getAll(elapsed));
-    }
-
-
-    @PostMapping
-    @RequestMapping("/worstFit")
-    public ResponseEntity worstFit(@RequestBody int[] partitions){
-        if (!iniciado){
-            init();
-        }
-        Stopwatch timer = Stopwatch.createStarted();
-        for (int i: partitions) {
-            if (!alloc(i, Alocacao.WORSTFIT)){
-                timer.stop();
-                return badResponse();
-            }
-        }
-        long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
-
-        return ResponseEntity.ok(getAll(elapsed));
-    }
-
-    @PostMapping
-    @RequestMapping("/firstFit")
-    public ResponseEntity firstFit(@RequestBody int[] partitions){
-        if (!iniciado){
-            init();
-        }
-        Stopwatch timer = Stopwatch.createStarted();
-        for (int i: partitions) {
-            if (!alloc(i, Alocacao.FIRSTFIT)){
-                timer.stop();
-                return badResponse();
-            }
-        }
-        long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
-        return ResponseEntity.ok(getAll(elapsed));
+        return ResponseEntity.status(201).build();
     }
 
     @GetMapping
     public ResponseEntity showPartitions(){
         if (!iniciado){
-            init();
+            return notYetInit();
         }
         return ResponseEntity.status(200).body(getAll());
     }
 
-    private List<Memoria> getAll(){
-        return Simulador.getInstance().ShowPartitions();
+    @GetMapping
+    @RequestMapping("/reset")
+    public ResponseEntity reset(){
+        if (!iniciado){
+            return notYetInit();
+        }
+        simulador.setParticoes(new ArrayList<>());
+        this.iniciado = true;
+        return ResponseEntity.ok().build();
     }
-    private Resposta getAll(long duration){
-        return new Resposta(duration, Simulador.getInstance().ShowPartitions());
-    }
 
-    private boolean alloc(int partitions, Alocacao alocacao) {
-        Particao p = new Particao(partitions, false);
-
-        int res  = -1;
-
-        switch (alocacao){
-            case BESTFIT:
-                res = Simulador.getInstance().bestFit(p);
-                break;
-            case WORSTFIT:
-                res = Simulador.getInstance().worstFit(p);
-                break;
-            case FIRSTFIT:
-                res = Simulador.getInstance().firstFit(p);
-                break;
+    @PostMapping
+    @RequestMapping("/alocar")
+    public ResponseEntity alocar(@RequestBody Processo processo){
+        if (!iniciado){
+            return notYetInit();
         }
 
-        return Simulador.getInstance().alloc(res, p, partitions);
+        Stopwatch timer = Stopwatch.createStarted();
+
+        boolean success = simulador.alocar(processo);
+
+        long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
+
+        var res = new Resposta(elapsed, simulador.getParticoes(), success);
+
+        return ResponseEntity.ok(res);
     }
 
-    private ResponseEntity badResponse(){
-        return ResponseEntity.status(400).contentType(MediaType.APPLICATION_JSON)
-                .body("{\"mensagem\":\"Nenhum espaço livre satisfaz a alocação\"}");
+    @PostMapping
+    @RequestMapping("/desalocar")
+    public ResponseEntity desalocar(@RequestBody int index){
+        if (!iniciado){
+            return notYetInit();
+        }
+        return ResponseEntity.ok(simulador.desalocar(index));
     }
 
-    private void init(){
-        Simulador.setInstance(1000);
-        this.iniciado = true;
+    private List<Particao> getAll(){
+        return this.simulador.getParticoes();
+    }
+
+    private ResponseEntity notYetInit(){
+        return ResponseEntity.status(400).body("{\"mensagem\":\"particoes ainda não foram setadas\"}");
     }
 }
 
