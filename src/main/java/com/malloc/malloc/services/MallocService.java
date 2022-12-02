@@ -22,8 +22,8 @@ public class MallocService {
 
     private Simulador simulador;
 
-    @PostMapping
-    @RequestMapping("/setParticoes")
+
+    @RequestMapping(value = "/setParticoes", method = RequestMethod.POST)
     public ResponseEntity setParticoes(@RequestBody ParticoesToSet particoes){
 
         List<Particao> particaoList = new ArrayList<>();
@@ -55,7 +55,7 @@ public class MallocService {
         return ResponseEntity.status(201).build();
     }
 
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity showPartitions(){
         if (!iniciado){
             return notYetInit();
@@ -63,8 +63,7 @@ public class MallocService {
         return ResponseEntity.status(200).body(getAll());
     }
 
-    @GetMapping
-    @RequestMapping("/reset")
+    @RequestMapping(value = "/reset", method = RequestMethod.GET)
     public ResponseEntity reset(){
         if (!iniciado){
             return notYetInit();
@@ -74,8 +73,7 @@ public class MallocService {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
-    @RequestMapping("/alocar")
+    @RequestMapping(value = "/alocar", method = RequestMethod.POST)
     public ResponseEntity alocar(@RequestBody Processo processo){
         if (!iniciado){
             return notYetInit();
@@ -92,8 +90,7 @@ public class MallocService {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping
-    @RequestMapping("/desalocar")
+    @RequestMapping(value = "/desalocar", method = RequestMethod.GET)
     public ResponseEntity desalocar(@RequestParam("index") int index){
         if (!iniciado){
             return notYetInit();
@@ -106,7 +103,7 @@ public class MallocService {
     }
 
     private ResponseEntity notYetInit(){
-        return ResponseEntity.status(400).body("{\"mensagem\":\"particoes ainda não foram setadas\"}");
+        return ResponseEntity.status(400).body("{\"mensagem\":\"particoes ainda nao foram setadas\"}");
     }
 }
 

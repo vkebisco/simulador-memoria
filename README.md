@@ -20,3 +20,9 @@ docker run -d -p 8080:8080 vkebisco/memory-simulator-v2
 ```
 java -jar memory-simulator.jar
 ```
+
+## uma documentação do swagger pode ser acessada em
+
+``
+http://localhost:8080/swagger-ui/index.html
+``
