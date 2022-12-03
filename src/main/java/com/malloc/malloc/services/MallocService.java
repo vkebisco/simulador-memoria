@@ -85,9 +85,7 @@ public class MallocService {
 
         long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
 
-        var res = new Resposta(elapsed, simulador.getParticoes(), success);
-
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(new Resposta(elapsed, simulador.getParticoes(), success));
     }
 
     @RequestMapping(value = "/desalocar", method = RequestMethod.GET)

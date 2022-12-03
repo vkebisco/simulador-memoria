@@ -45,13 +45,13 @@ public class Simulador {
             Particao escolhido = this.particoes.get(ind);
             int start = escolhido.getEnderecoDeInicio();
 
-            Particao newPartition = new Particao(start, processo.getTamanho(), false ,processo);
+            Particao newPartition = new Particao(start, escolhido.getTamanho(), false ,processo);
 
             this.particoes.remove(ind);
             this.particoes.add(ind, newPartition);
 
-            int restante = escolhido.getTamanho() - processo.getTamanho();
-           /* if (restante != 0){
+           /*  int restante = escolhido.getTamanho() - processo.getTamanho();
+             if (restante != 0){
                 int inicioFree = start + processo.getTamanho();
                 this.particoes.add(ind+1, new Particao(inicioFree, restante, true));
             } */
