@@ -51,10 +51,10 @@ public class Simulador {
             this.particoes.add(ind, newPartition);
 
             int restante = escolhido.getTamanho() - processo.getTamanho();
-            if (restante != 0){
+           /* if (restante != 0){
                 int inicioFree = start + processo.getTamanho();
                 this.particoes.add(ind+1, new Particao(inicioFree, restante, true));
-            }
+            } */
             return true;
         }
         return false;
