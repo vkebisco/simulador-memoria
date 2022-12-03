@@ -52,7 +52,7 @@ public class MallocService {
 
         this.iniciado = true;
 
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(201).body(getAll());
     }
 
     @RequestMapping(method = RequestMethod.GET)
