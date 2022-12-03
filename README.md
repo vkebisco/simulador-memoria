@@ -26,3 +26,20 @@ java -jar memory-simulator.jar
 ``
 http://localhost:8080/swagger-ui/index.html
 ``
+
+### observação:
+ao setar as partições, use o valor do campo 'tipoAlocacao' como:
+1 - best fit
+2 - worst fit
+3 - first fit
+
+ex para best fit:
+
+ ```
+ {
+  "particoes": [
+    100
+  ],
+  "tipoAlocacao": 1
+}
+ ```
