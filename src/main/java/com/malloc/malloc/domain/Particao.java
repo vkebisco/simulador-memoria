@@ -7,7 +7,9 @@ public class Particao {
     private boolean isFree;
 
     private Processo processo;
-    private String duracao;
+
+    public Particao() {
+    }
 
     public Particao(int enderecoDeInicio, int tamanho, boolean isFree, Processo processo) {
         this.enderecoDeInicio = enderecoDeInicio;
@@ -47,14 +49,6 @@ public class Particao {
 
     public void incrementarTamanho(int tamanho){
         this.tamanho += tamanho;
-    }
-
-    public String getDuracao() {
-        return duracao;
-    }
-
-    public void setDuracao(String duracao) {
-        this.duracao = duracao;
     }
 
     public Processo getProcesso() {

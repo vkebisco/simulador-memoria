@@ -3,12 +3,12 @@ package com.malloc.malloc.domain;
 public class Processo {
     private String nome;
     private int tamanho;
-    private long duracao;
+    private String duracao;
 
     public Processo() {
     }
 
-    public Processo(String nome, int tamanho, long duracao) {
+    public Processo(String nome, int tamanho, String duracao) {
         this.nome = nome;
         this.tamanho = tamanho;
         this.duracao = duracao;
@@ -30,11 +30,11 @@ public class Processo {
         this.tamanho = tamanho;
     }
 
-    public long getDuracao() {
+    public String getDuracao() {
         return duracao;
     }
 
-    public void setDuracao(long duracao) {
+    public void setDuracao(String duracao) {
         this.duracao = duracao;
     }
 }

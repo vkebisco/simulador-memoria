@@ -3,10 +3,7 @@ package com.malloc.malloc.services;
 import com.google.common.base.Stopwatch;
 import com.malloc.malloc.diverse.Alocacao;
 import com.malloc.malloc.diverse.Simulador;
-import com.malloc.malloc.domain.Particao;
-import com.malloc.malloc.domain.ParticoesToSet;
-import com.malloc.malloc.domain.Processo;
-import com.malloc.malloc.domain.Resposta;
+import com.malloc.malloc.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,16 +71,31 @@ public class MallocService {
     }
 
     @RequestMapping(value = "/alocar", method = RequestMethod.POST)
-    public ResponseEntity alocar(@RequestBody Processo processo){
+    public ResponseEntity alocar(@RequestBody AlocarProcessoDto dto){
         if (!iniciado){
             return notYetInit();
         }
 
         Stopwatch timer = Stopwatch.createStarted();
 
-        boolean success = simulador.alocar(processo);
+        boolean success = simulador.alocar(dto.getProcesso());
 
         long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
+
+        int count = 0;
+        Particao p = null;
+
+        for (Particao particaoDto : dto.getParticaoList()){
+
+            var duracaoToset = particaoDto.getProcesso().getDuracao();
+
+            p = simulador.getParticoes().get(count);
+            if (p.getProcesso() != null){
+                p.getProcesso().setDuracao(duracaoToset);
+            }
+            count++;
+        }
+
 
         return ResponseEntity.ok(new Resposta(elapsed, simulador.getParticoes(), success));
     }
