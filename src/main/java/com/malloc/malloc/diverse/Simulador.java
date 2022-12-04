@@ -50,6 +50,8 @@ public class Simulador {
             this.particoes.remove(ind);
             this.particoes.add(ind, newPartition);
 
+
+            //alocação particionada dinamica
            /*  int restante = escolhido.getTamanho() - processo.getTamanho();
              if (restante != 0){
                 int inicioFree = start + processo.getTamanho();
