@@ -21,7 +21,7 @@ public class MallocService {
 
 
     @RequestMapping(value = "/setParticoes", method = RequestMethod.POST)
-    public ResponseEntity setParticoes(@RequestBody ParticoesToSet particoes){
+    public ResponseEntity setParticoes(@RequestBody ParticoesDto particoes){
 
         List<Particao> particaoList = new ArrayList<>();
 
@@ -80,9 +80,9 @@ public class MallocService {
 
         var tupla = simulador.alocar(dto.getProcesso());
 
-        boolean success = (boolean) tupla[0];
-
         long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
+
+        boolean success = (boolean) tupla[0];
 
         atualizaDuracao(dto.getParticaoList(), (int) tupla[1], dto.getProcesso().getDuracao());
 

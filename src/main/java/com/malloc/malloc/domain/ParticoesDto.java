@@ -1,14 +1,14 @@
 package com.malloc.malloc.domain;
 
-public class ParticoesToSet {
+public class ParticoesDto {
     private int[] particoes;
     private int tamanhoMemoria;
     private int tipoAlocacao;
 
-    public ParticoesToSet() {
+    public ParticoesDto() {
     }
 
-    public ParticoesToSet(int[] particoes, int tamanhoMemoria, int tipoAlocacao) {
+    public ParticoesDto(int[] particoes, int tamanhoMemoria, int tipoAlocacao) {
         this.particoes = particoes;
         this.tamanhoMemoria = tamanhoMemoria;
         this.tipoAlocacao = tipoAlocacao;
