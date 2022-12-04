@@ -136,12 +136,12 @@ public class MallocService {
             p = simulador.getParticoes().get(count);
             if (count == index){
                 p.getProcesso().setDuracao(duracao);
-            }else {
+            }else if (particaoDto.getProcesso() != null &&
+                    p.getProcesso() != null){
                 duracaoToset = particaoDto.getProcesso().getDuracao();
 
-                if (p.getProcesso() != null){
-                    p.getProcesso().setDuracao(duracaoToset);
-                }
+                p.getProcesso().setDuracao(duracaoToset);
+
             }
 
             count++;
