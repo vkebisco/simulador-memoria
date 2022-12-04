@@ -78,11 +78,13 @@ public class MallocService {
 
         Stopwatch timer = Stopwatch.createStarted();
 
-        boolean success = simulador.alocar(dto.getProcesso());
+        var tupla = simulador.alocar(dto.getProcesso());
+
+        boolean success = (boolean) tupla[0];
 
         long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
 
-        atualizaDuracao(dto.getParticaoList());
+        atualizaDuracao(dto.getParticaoList(), (int) tupla[1], dto.getProcesso().getDuracao());
 
         return ResponseEntity.ok(new Resposta(elapsed, simulador.getParticoes(), success));
     }
@@ -123,5 +125,29 @@ public class MallocService {
             count++;
         }
     }
+
+    private void atualizaDuracao(List<Particao> list, int index, String duracao){
+        int count = 0;
+        Particao p = null;
+        String duracaoToset = null;
+
+        for (Particao particaoDto : list){
+
+            p = simulador.getParticoes().get(count);
+            if (count == index){
+                p.getProcesso().setDuracao(duracao);
+            }else {
+                duracaoToset = particaoDto.getProcesso().getDuracao();
+
+                if (p.getProcesso() != null){
+                    p.getProcesso().setDuracao(duracaoToset);
+                }
+            }
+
+            count++;
+        }
+    }
+
+
 }
 

@@ -22,7 +22,7 @@ public class Simulador {
         this.tipoAlocacao = tipoAlocacao;
     }
 
-    public boolean alocar(Processo p){
+    public Object[] alocar(Processo p){
         int ind = -1;
         switch (tipoAlocacao){
             case BESTFIT:
@@ -36,7 +36,7 @@ public class Simulador {
                 break;
         }
 
-        return mover(p,ind);
+        return new Object[]{mover(p,ind), ind} ;
     }
 
     public boolean mover(Processo processo, int ind){
