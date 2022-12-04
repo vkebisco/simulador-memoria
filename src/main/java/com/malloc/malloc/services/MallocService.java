@@ -82,30 +82,21 @@ public class MallocService {
 
         long elapsed = timer.stop().elapsed(TimeUnit.NANOSECONDS);
 
-        int count = 0;
-        Particao p = null;
-
-        for (Particao particaoDto : dto.getParticaoList()){
-
-            var duracaoToset = particaoDto.getProcesso().getDuracao();
-
-            p = simulador.getParticoes().get(count);
-            if (p.getProcesso() != null){
-                p.getProcesso().setDuracao(duracaoToset);
-            }
-            count++;
-        }
-
+        atualizaDuracao(dto.getParticaoList());
 
         return ResponseEntity.ok(new Resposta(elapsed, simulador.getParticoes(), success));
     }
 
-    @RequestMapping(value = "/desalocar", method = RequestMethod.GET)
-    public ResponseEntity desalocar(@RequestParam("index") int index){
+    @RequestMapping(value = "/desalocar", method = RequestMethod.POST)
+    public ResponseEntity desalocar(@RequestBody DesalocarProcessoDto dto){
         if (!iniciado){
             return notYetInit();
         }
-        return ResponseEntity.ok(simulador.desalocar(index));
+        simulador.desalocar(dto.getIndex());
+
+        atualizaDuracao(dto.getParticaoList());
+
+        return ResponseEntity.ok(getAll());
     }
 
     private List<Particao> getAll(){
@@ -114,6 +105,23 @@ public class MallocService {
 
     private ResponseEntity notYetInit(){
         return ResponseEntity.status(400).body("{\"mensagem\":\"particoes ainda nao foram setadas\"}");
+    }
+
+    private void atualizaDuracao(List<Particao> list){
+        int count = 0;
+        Particao p = null;
+        String duracaoToset = null;
+
+        for (Particao particaoDto : list){
+
+            duracaoToset = particaoDto.getProcesso().getDuracao();
+
+            p = simulador.getParticoes().get(count);
+            if (p.getProcesso() != null){
+                p.getProcesso().setDuracao(duracaoToset);
+            }
+            count++;
+        }
     }
 }
 
