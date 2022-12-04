@@ -18,6 +18,7 @@ docker run -d -p 8080:8080 vkebisco/memory-simulator-v2
 ## ou simplesmente
 
 ```
+mvn package
 java -jar memory-simulator.jar
 ```
 
