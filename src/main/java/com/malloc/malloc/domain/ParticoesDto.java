@@ -2,15 +2,13 @@ package com.malloc.malloc.domain;
 
 public class ParticoesDto {
     private int[] particoes;
-    private int tamanhoMemoria;
     private int tipoAlocacao;
 
     public ParticoesDto() {
     }
 
-    public ParticoesDto(int[] particoes, int tamanhoMemoria, int tipoAlocacao) {
+    public ParticoesDto(int[] particoes, int tipoAlocacao) {
         this.particoes = particoes;
-        this.tamanhoMemoria = tamanhoMemoria;
         this.tipoAlocacao = tipoAlocacao;
     }
 
@@ -20,14 +18,6 @@ public class ParticoesDto {
 
     public void setParticoes(int[] particoes) {
         this.particoes = particoes;
-    }
-
-    public int getTamanhoMemoria() {
-        return tamanhoMemoria;
-    }
-
-    public void setTamanhoMemoria(int tamanhoMemoria) {
-        this.tamanhoMemoria = tamanhoMemoria;
     }
 
     public int getTipoAlocacao() {

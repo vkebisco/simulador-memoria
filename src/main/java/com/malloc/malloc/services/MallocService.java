@@ -45,7 +45,7 @@ public class MallocService {
                 break;
         }
 
-        this.simulador = new Simulador(particoes.getTamanhoMemoria(), particaoList, tipo);
+        this.simulador = new Simulador(particaoList, tipo);
 
         this.iniciado = true;
 

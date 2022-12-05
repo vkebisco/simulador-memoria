@@ -6,9 +6,6 @@ import com.malloc.malloc.domain.Processo;
 import java.util.List;
 
 public class Simulador {
-
-    private int memoria; //tamanho do processo
-
     private List<Particao> particoes;
 
     private Alocacao tipoAlocacao;
@@ -16,8 +13,7 @@ public class Simulador {
     public Simulador() {
     }
 
-    public Simulador(int memoria, List<Particao> particoes, Alocacao tipoAlocacao) {
-        this.memoria = memoria;
+    public Simulador( List<Particao> particoes, Alocacao tipoAlocacao) {
         this.particoes = particoes;
         this.tipoAlocacao = tipoAlocacao;
     }
@@ -114,14 +110,6 @@ public class Simulador {
 
     public void setTipoAlocacao(Alocacao tipoAlocacao) {
         this.tipoAlocacao = tipoAlocacao;
-    }
-
-    public int getMemoria() {
-        return memoria;
-    }
-
-    public void setMemoria(int memoria) {
-        this.memoria = memoria;
     }
 
     public List<Particao> getParticoes() {
